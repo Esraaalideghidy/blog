@@ -1,0 +1,148 @@
+{% extends "base.html" %} {% load static %} {% block content %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.8/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<div class="row tm-row">
+  {% if request.user == blog_detail.author %}
+  <div>
+    <a href="{% url 'edit_blog' blog_detail.id %}"><button type="submit" class="btn btn-primary">Edit</button></a>
+  </div>
+  <!-- Button trigger modal -->
+<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+  Delete
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">{{ blog_detail.title|title }}</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Did you want delete this blog?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <a href="{% url 'delete_blog' blog_detail.id %}"><button type="button" class="btn btn-primary">YES</button></a>
+      </div>
+    </div>
+  </div>
+</div>
+    
+  {% endif %} 
+
+
+  <div class="col-12">
+    <hr class="tm-hr-primary tm-mb-55" />
+    <!-- Video player 1422x800 -->
+    <img src="{{ blog_detail.img.url }}" width="954" height="535" controls class="tm-mb-40">
+      Your browser does not support the video tag.
+    </img>
+  </div>
+</div>
+<div class="row tm-row">
+  <div class="col-lg-8 tm-post-col">
+    <div class="tm-post-full">
+      <div class="mb-4">
+        <h2 class="pt-2 tm-color-primary tm-post-title">
+          {{ blog_detail.title|title }}
+        </h2>
+        <p class="tm-mb-40">{{ blog_detail.date|date:'M d, Y' }}</p>
+        <p class="tm-mb-40">Created by {{ blog_detail.author|title }}</p>
+        <p>
+          {{ blog_detail.content }}
+      
+        </p>
+        <p>
+          Duis pretium efficitur nunc. Mauris vehicula nibh nisi. Curabitur
+          gravida neque dignissim, aliquet nulla sed, condimentum nulla.
+          Pellentesque id venenatis quam, id cursus velit. Fusce semper tortor
+          ac metus iaculis varius. Praesent aliquam ex vel lectus ornare
+          tristique. Nunc et eros quis enim feugiat tincidunt et vitae dui.
+        </p>
+        <span class="d-block text-right tm-color-primary"
+          >Creative . Design . Business</span
+        >
+      </div>
+
+      <!-- Comments -->
+      <div>
+        <h2 class="tm-color-primary tm-post-title">Comments</h2>
+        <hr class="tm-hr-primary tm-mb-45" />
+        {% for c in comments %}
+        <div class="tm-comment tm-mb-45">
+          <figure class="tm-comment-figure">
+            <img
+              src="{% if c.user.profile.image %} {{ c.user.profile.image.url }} {% else %} data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMwAAADACAMAAAB/Pny7AAAAb1BMVEXm5ub///9AQEDz8/P8/Pzb29vp6ens7Ow9PT3w8PA6Ojo1NTX29vb5+fnj4+MxMTEsLCzOzs5JSUmQkJBhYWFra2uioqK0tLSurq6oqKibm5uDg4PU1NTAwMBxcXGKiopYWFgfHx97e3tQUFAWFhaMMGDcAAALz0lEQVR4nN2dCbOjKBCAfRpBMOKV08Sc8/9/42oENS8eYHcS33ZtbdXUTAhf+qCBBqyfn8UPhiyWRFhTRJAlTg9cx8KAWQSMTAJRQpwA3gsMmEXgUDFNKS31CArmgcMslhTIUfNYDGZvUJjAYUgolTAn+BYM1FO6hLDJOBCYgOKjVDjLT8MscO3rWeikLk2FeStKKexzMMs3oxQinM/AfAClFGLqOhNggndbWCOGgc0YZnIGNkWE5Zj0zRTmg2qpxEQ5hjDOe0aWASlStvfAfFwtlWgrxwQm+LhapOiGNQOY5bdYytkOMsx3TEyJVkKgC/M1E1Oik61pwgQfHFy6RdDxMKAHs7S+zVIIGaXRgvmi67dlNKjpwHx+pOyTkaCmAeN8G6ElwzTjMHNiGaEZhfnu8PIqQzRjMHNjGaQZgZmXjT1kIKYNw3xofmwovTSDMF/PYbqlVzdDMDNlKTKbng4PwCywFsTxpSeHHoCZXyCrRXTT9MPMMJC1pDNA98LMM5A10pVC98J8u7NjQgxgZhrIWkK1YWbs/LW8BoFumMW3O6olL93uhpm/kZXyYmidMH/ByEr5HZ+7YOaaxrzI7yWODpgZpzG/hS3GYPCHS6IEveXlCEyAqxjCHEe4cZ7nsSscB7lw4Dl/foXBzMmow467w+V+vydJUvx/ddi5zEH8tcRyECbA+ybmxOfE55x7Sjj3/fs5ZojhMhiCcZAWYgsH2SX/Qs/+LV747761sPznaTLwGwZJMYSKfXLlLySS55rsBVatStALgxSWiYgv11eltHFWscChYb0wOIqhxzTyB1BK8cP0iPPLBX0wGM0Tkq/DZz0Ufl8If9KVF65zC0M5tAdmgeD9hePfW2rx/Ohqr0632+20Sq6R3wLy7zuUOBB0wyAohlgbu3F8HvmnLI+PbiHHOM7TNY+av/WTPYZuaDcMXDGE7BsWfk2yYtynVGYzlBa5QHZvQgPnGwQY0QmDMJaRXWNIkb1xfydkxZ/djV27lBduEayBdcHAmyV5pFh4eBOdmRhh4tAMpv9yBN0sXmHgWRk91hGLJ9verVCy3Na26IUuXDfLVxj4T0RWyoDClTtktI5bRzz/Ardu+gIDHzDZ5qpY1mK4i8xdK5rrHkwjp5wtGHCT1FUs0VqM2Q5x1cjqefBUgP2CWYCtjN18ZWMa3SOxovFvYJhqktbAgGfLNPeV72tFKJonVRTw7BxKU+0/NTBgK2MnGaGivZaSiZVJ1fAb/MufYMDrSyROqrAcnly9tsjxVNHwSwxVzcPOahhwfYyTeqZGQ3d29RmeQlXzsLMaBtyaWFVWFh60Z13ElSHDX2sqs1+cFgx4ism2d69SzFb/d2H7SjX8Dk7RynI0BQN2GSatzF8bjBrkuK7UyTOwZbRgoHkZsZTFpCY/CztI2zwDv/+RnykY8A8TVy7jJTuTpti+CoH+6YjgNBIGfByG5pcHDF8ZRVka36d8rEvYQsGAXYZK//fXRitIxFUKBUeAwmkkDDiXUXHJNM+iVQTw+A6cny0VDHhRlmWV//ODmcE6NxkBNmgw8BNkCsYzHMuds4cFwxQMvCWVNBoOGEzCRHAYImHgu5hTNYMIYy0qmCV4waz2mbMhDJ7PCAUDbajJsgyjmZoEIUQzqZkAvsjEtmooN1pwJRbaOGNZQQWDsNjTZABGMLH82AU8cy5icwUDb6jOzcySeaoUujb6DbrFqWAQlv/EyZ+QzDup8YyuX9gDBqOMgZ3lFMAk/yVCLgX64PlM2RoejDSYws4MZprqQxj+jwij8l87OuuvAQg5o+Nr8HTGwoSxHDlp5Hf91Zn8zicNtd1CjmgwNJfrZpGuMxNxCE35B9t7wOCUy5CVWjjbatpMvWx2wulAXMLglLKwrVxr9i9aHkDji6/oUXqACVPMGtUuwEnD0OoVwML9cWo1cGHif7akOYzWlRFyULtNIXgxQzaJCVMEtKjqnuffRtauiXNT29IRSiizsGEsUu/PRrfB051kuZbcthdhVQdiwxzrgoXoPrCLTI9JzXIFr5nX344LY9F9XdPgezvRWRpDiNj69c55ZLQCOijYMMTKahoenfIXnLJCIz/VlQ+e2dL0yJcjwxSj+tmrqy9C77A9CkYl0aN45rg98LroyeMpSpWW/O4YLwOohLopb+qWQr5Kd/FRFBiUiGO+S9d+U4vGvRSpHPAhFQxqWTZ1s1aNls1D/3I6nNM0PR9Ol+JPrb+yM0wWzESzaVNsk6dKQO77YVj+5z9VoIbJDpXlLTCFbxzrUaRf/FOMXE+POJ9pt8qCNBxh8VL0O/jeAkNZfhkrni00s8oZ7rEDirU60wgh+aW3PPuJ5rrCKZ9VwrDWzZQQK7511TR7zejTwolumH7jYK1oSqHuxn72/UdNs5zpv9Q2F/92j1AIKAUZhhWZStvCeBgmq9MhzTb7/X6TpYfTKgnDp39xPeVI3y4CrF2AUgjZtwcYrxguD9k2di2mxHLjbXa7hO3DG1GyIyjKUVsaKEcAqGgnMl5kHwqQIo9pO0X5RzfeHXjU4JRJDQrNAmvnrJyj3Fq18RHP4iIj65wCFFlanPmNa3n8gOI4C6w9zYJl3QQx/5q61sABGUKF2z7I4Z8QTmyQeusc2hJtqmGLyeP6OHrUp4jh66aOPjzBdcOw6gAKvdSu73tbraGd0p1d/wARmEY4SBUaxL3Vc3q+jnVjLYvXzQoIeIcmwKmdISKtWeyzQWhirXnpFThRa2pnYCUaZO/XLJlltA1oZXatG9iGc1PVBFoGILmaWnr23jDXImyjAjq3QSubDkolIHFXvhoo9Sqanz++UyYaXiBJ9BKlRpPVDnOdwFIWd9RHCNLpv2m7RnP6sEmOKjW5nic2ktaHO7QD4YuUp+nhdc2OmlWG64lWQkR9xGE1WTUORsU5UyYPODlCYhWg+dRtp+eK84nHGglL1HEG3c2/rla26ojDZeLMk2Gc0mB7yQKqsSCu3Kr17M3EfqCcn5G7/zwBDRL1Jrqvs4P4Kr/Pz0w6P6cKeewQugKeys3aaacCfp9smjRuUlnIBy6xUiVetn+eNFb9PkA34U4jGqsupNDCSLVf60+pPX89DTjBzthGFjPCa9+aIyt786Zez2lOsTN1NOMGXs8nlpyqhmdzJXecoDU+26zK/2wPoVyMZTILMD+woS5uA506V7GssDKEWsJY2llibLKdp85NQwDNVPUfRrWYGrIiU6fpvg/AVDXiLMdt8GG+UlTBWmTqNKwbxkw15Fj5v5egVCWxnTfJaWrF/L7dhJn8KLQu/0Wo4y2dRsV5o+ZadwL9vnfGCCa/y29HqRghxJ4SAcSiD8ZINXRbrXrxFc6mhKPSCZPYKFo3A0LuaqJyXsbXOFURjjzkEBnlmv13NRmphu4lzAEJ5ixhdvqaeXqm6vV+MwMVZxFiZG5OR5ksWJHFEIzJJC27Pu5gCrFg0ujR3jXTto7n98NeYUwWnYQUpIJR1Zz+R8buBDRJnpFvYTRvbuy2xv/XPZr/qxtO534jeCM6d8/iXED3ftG7Ffhv3Nf8+lJQz03aWLdpvlNe323ou+N8/obWcWN77+3zc49oJrfPz95tuvrc/2LDvF856Hzo5G++pdHzMsjQKyfzpel44GAEZrZJ2pT3Z2abpPW+q/cH32zqfyNw5DWtOdJMfU1rhgn00GuHoy/QzYxm8AHXP/Y24PBjtH/s1cbhFzU1YOZDM/Y6qA7MzyefN+8XQTFeOp3De7oFC9IbtOivhUwRtNeBv5+nCabRSV2Yb88IUF/U/vluUNN7ud0A5ntJtIa7GMN8a81Gy8TMYX4wX/XRlOEMBgLz+bk00zSxKTBFOvBJ5RioZRLMJ5WjM7jAYD6W3egGMRjMZxbW9cYWBJj3D6HmKACYt+Y3RHtowYIpIsF7UgJi6PcoMOWhaPw4TaeiQGGKjxY5AV4wEBZ1AJ2BwpQ4jGI9wceWoK7AYX4q9cCFLk3HlbfAlEe9gTwFCbwXSDA/5WnvYKq5FY6C0gU8mIcEg7eadYNAjasR1/kPA1OmPA3Pf/0AAAAASUVORK5CYII={% endif %}"width="100" height="100"
+              alt="Image"
+              class="mb-2 rounded-circle img-thumbnail"
+            />
+            <figcaption class="tm-color-primary text-center">
+              {{ c.user.username }}
+            </figcaption>
+          </figure>
+          <div>
+            <p>
+             {{c.content}}
+            </p>
+          <form method="post" action="{% url 'delete_comment' %}">
+            {% csrf_token %}
+            <div class="d-flex justify-content-between">
+                <div class="d-flex align-items-center">
+                <input class="form-control" name="id_delete" id="id_delete" type="hidden" value="{{ c.id }}"/> {% comment %} id يتاع الكومنت {% endcomment %}
+                <input class="form-control" name="id" id="id" type="hidden" value="{{ blog_detail.id }}"/> {% comment %} id يتاعت البلوج {% endcomment %}
+
+              <button type="submit" class="tm-color-primary"><i class="fa-solid fa-trash-can"></i></button>
+              <span class="tm-color-primary">&nbsp;{{c.created_at|timesince}}</span>
+                </div>
+            </div>
+          </form>
+          </div>
+        </div>
+        {% endfor %}
+        <form action="{% url 'comment' %}" class="mb-5 tm-comment-form" method="POST">
+            {% csrf_token %}
+          <h2 class="tm-color-primary tm-post-title mb-4">Your comment</h2>
+          <div class="mb-4">
+              <input class="form-control" name="blog_id" type="hidden" value="{{ blog_detail.id }}"/>
+              <input class="form-control" name="comment_text" id="comment_text" type="text" />
+          </div>
+          
+          <div class="text-right">
+            <button type="submit" class="tm-btn tm-btn-primary tm-btn-small">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <aside class="col-lg-4 tm-aside-col">
+    <div class="tm-post-sidebar">
+      <hr class="mb-3 tm-hr-primary" />
+      <h2 class="mb-4 tm-post-title tm-color-primary">Categories</h2>
+      <ul class="tm-mb-75 pl-5 tm-category-list">
+        {% for tag in blog_detail.tags.all %}
+        <li><a href="{% url 'get_tags' tag.slug %}" class="tm-color-primary">{{ tag.name }}</a></li>
+        {% endfor %}
+      </ul>
+      <hr class="mb-3 tm-hr-primary" />
+      <h2 class="tm-mb-40 tm-post-title tm-color-primary">Related Posts</h2>
+      {% for r in blog_detail.get_related_posts_by_tags %}
+      <a href="{{ r.get_absolute_url }}" class="d-block tm-mb-40">
+        <fi|gure>
+          <img src="{{ r.img.url }}" alt="Image" class="mb-3 img-fluid" />
+          <figcaption class="tm-color-primary">
+            {{ r.title|title }} 
+          </figcaption>
+        </fi|gure>
+      </a>
+      {% endfor %}
+
+    </div>
+  </aside>
+</div>
+
+
+
+{% endblock %}
